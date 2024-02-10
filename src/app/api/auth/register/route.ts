@@ -1,12 +1,11 @@
 import bcrypt from "bcrypt";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
 import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
 
 export async function POST(request: Request) {
-  await dbConnect();
   const body = await request.json();
   const { firstname, lastname, email, password, confirmPassword } = body;
+  console.log(body);
 
   if (!firstname || !lastname || !email || !password || !confirmPassword) {
     return NextResponse.json(
@@ -32,7 +31,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const existingUser = await User.findOne({ email: email });
+  const existingUser = await db.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
   if (existingUser) {
     return NextResponse.json(
       {
@@ -46,13 +49,15 @@ export async function POST(request: Request) {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = new User({
-    firstname: firstname,
-    lastname: lastname,
-    email: email,
-    password: hashedPassword,
+
+  await db.user.create({
+    data: {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: hashedPassword,
+    },
   });
-  await user.save();
 
   return NextResponse.json({
     success: true,

@@ -5,13 +5,12 @@ import { useState } from "react";
 import { useToast } from "../ui/use-toast";
 
 import { ZodError, z } from "zod";
+import { signIn } from "next-auth/react";
 
 import {
   Dialog,
   DialogContent,
-  //   DialogDescription,
   DialogHeader,
-  //   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -39,7 +38,7 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
   const [loading, setLoading] = useState(false);
   const [issues, setIssues] = useState<string[]>([]);
 
-  const User = z
+  const Register = z
     .object({
       email: z.string().email({ message: "Please provide a valid email" }),
       firstname: z
@@ -51,11 +50,9 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
       password: z
         .string()
         .min(8, { message: "password must have 8 characters at minimum" }),
-      confirmPassword: z
-        .string()
-        .min(8, {
-          message: "password confirmation must have 8 characters at minimum",
-        }),
+      confirmPassword: z.string().min(8, {
+        message: "password confirmation must have 8 characters at minimum",
+      }),
     })
     .superRefine(({ password, confirmPassword }, ctx) => {
       if (password !== confirmPassword) {
@@ -72,7 +69,7 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
     setLoading(true);
     try {
       // verify the data before sending it to the server
-      const parsedData = User.safeParse(data);
+      const parsedData = Register.safeParse(data);
       let issues: string[] = [];
       if (!parsedData.success) {
         parsedData.error.issues.map((issue) => {
@@ -86,7 +83,7 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(parsedData),
+        body: JSON.stringify(data),
       });
       const result = await response.json();
 
@@ -119,6 +116,33 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
       });
     }
   };
+
+  const Login = z.object({
+    email: z.string().email({ message: "Please provide a valid email" }),
+    password: z.string().min(8, {
+      message: "password must have 8 characters at minimum",
+    }),
+  });
+
+  const handleSignin = async () => {
+    setLoading(true);
+    try {
+      Login.safeParse({
+        email: data.email,
+        password: data.password,
+      });
+      signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        setIssues(error.issues.map((issue) => issue.message));
+      }
+    }
+    setLoading(false);
+  };
   return (
     <Dialog>
       <DialogTrigger>
@@ -134,11 +158,6 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="">
-          {/* <DialogTitle>Sign In</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription> */}
           <div className="font-bold text-3xl text-rose-600 text-center mb-2">
             {isSignIn ? "Sign In" : "Sign Up"}
           </div>
@@ -214,6 +233,8 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
                 event.preventDefault();
                 if (!isSignIn) {
                   handleSignup();
+                } else {
+                  handleSignin();
                 }
               }}
               className="bg-rose-600 text-white p-2 rounded-md w-full hover:bg-rose-500"
