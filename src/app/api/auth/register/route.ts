@@ -5,7 +5,6 @@ import { db } from "@/lib/db";
 export async function POST(request: Request) {
   const body = await request.json();
   const { firstname, lastname, email, password, confirmPassword } = body;
-  console.log(body);
 
   if (!firstname || !lastname || !email || !password || !confirmPassword) {
     return NextResponse.json(
