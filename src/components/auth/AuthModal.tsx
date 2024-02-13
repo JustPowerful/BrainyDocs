@@ -241,10 +241,12 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
             >
               {loading ? (
                 <Icons.loading className="w-4 h-4" />
-              ) : isSignIn ? (
-                "Sign In"
               ) : (
-                "Sign Up"
+                isSignIn ? (
+                  "Sign In"
+                ) : (
+                  "Sign Up"
+                )
               )}
             </button>
           </form>

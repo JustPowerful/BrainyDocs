@@ -1,6 +1,19 @@
-import { LogIn, LogOut, LucideProps, UserRoundPlus } from "lucide-react";
+import {
+  LogIn,
+  LogOut,
+  LucideProps,
+  UserRoundPlus,
+  User,
+  Menu,
+  Ungroup,
+  X,
+} from "lucide-react";
 
 export const Icons = {
+  close: X,
+  class: Ungroup,
+  menu: Menu,
+  user: User,
   login: LogIn,
   logout: LogOut,
   register: UserRoundPlus,

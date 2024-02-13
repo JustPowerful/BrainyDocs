@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "@/components/ui/toaster";
@@ -7,7 +7,11 @@ import { Toaster } from "@/components/ui/toaster";
 // session provider
 import SessionProvider from "@/components/providers/SessionProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  subsets: ["devanagari"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "BrainyDocs",
@@ -22,9 +26,9 @@ export default function RootLayout({
   return (
     <SessionProvider>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={poppins.className}>
           <Navbar />
-          {children}
+          <main className="pt-16">{children}</main>
           <Toaster />
         </body>
       </html>
