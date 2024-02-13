@@ -16,4 +16,28 @@ model User {
   firstname String
   lastname String
   password String
+  role Role @default(STUDENT)
+  teacherClasses Class[] // accessible for teacher
+  studentClasses StudentInClass[] // accessible for student
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+}
+
+model Class {
+  id Int @id @default(autoincrement())
+  name String
+  teacher User @relation(fields: [teacherId], references: [id])
+  teacherId Int
+  students StudentInClass[]
+}
+
+model StudentInClass {
+  id Int @id @default(autoincrement())
+  student User @relation(fields: [studentId], references: [id])
+  studentId Int
+  class Class @relation(fields: [classId], references: [id])
+  classId Int
 }
