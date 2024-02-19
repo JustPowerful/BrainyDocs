@@ -7,9 +7,13 @@ import {
   Menu,
   Ungroup,
   X,
+  Plus,
+  Check,
 } from "lucide-react";
 
 export const Icons = {
+  tick: Check,
+  plus: Plus,
   close: X,
   class: Ungroup,
   menu: Menu,
