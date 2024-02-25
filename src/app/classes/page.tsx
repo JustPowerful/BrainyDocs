@@ -8,6 +8,7 @@ import { Icons } from "@/components/Icons";
 import { FC, useEffect, useState } from "react";
 import CreateClass from "./components/CreateClass";
 import { Class } from "@prisma/client";
+import ClassPreview from "./components/ClassPreview";
 
 interface pageProps {}
 
@@ -73,10 +74,10 @@ const Classes: FC<pageProps> = ({}) => {
           )}
         </div>
       </div>
-      <div>
+      <div className="flex flex-col gap-2 pt-10">
         {/* classes */}
         {classes.map((c) => (
-          <div>{c.name}</div>
+          <ClassPreview classData={c} isTeacher={user?.role === "TEACHER"} />
         ))}
       </div>
       <div className="flex justify-center pt-10">

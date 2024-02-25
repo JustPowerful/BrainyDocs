@@ -9,9 +9,13 @@ import {
   X,
   Plus,
   Check,
+  Trash,
+  Pen,
 } from "lucide-react";
 
 export const Icons = {
+  edit: Pen,
+  delete: Trash,
   tick: Check,
   plus: Plus,
   close: X,
