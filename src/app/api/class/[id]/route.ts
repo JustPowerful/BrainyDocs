@@ -80,3 +80,63 @@ export async function DELETE(
     message: "Successfully deleted the classroom!",
   });
 }
+
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "You are not authorized!",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+
+  const user = await db.user.findUnique({
+    where: {
+      email: session.user?.email!,
+    },
+  });
+
+  if (!user) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "You are not authorized!",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+
+  const classroom = await db.class.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if (!classroom) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "The class that you're trying to fetch doesn't exist!",
+      },
+      {
+        status: 404,
+      }
+    );
+  }
+
+  return NextResponse.json({
+    success: true,
+    classroom: classroom,
+  });
+}

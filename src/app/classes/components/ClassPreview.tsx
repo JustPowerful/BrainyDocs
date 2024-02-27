@@ -17,14 +17,21 @@ import Link from "next/link";
 interface ClassPreviewProps {
   classData: Class;
   isTeacher: boolean;
+  onChange: () => void;
 }
 
-const ClassPreview: FC<ClassPreviewProps> = ({ classData, isTeacher }) => {
+const ClassPreview: FC<ClassPreviewProps> = ({
+  classData,
+  onChange,
+  isTeacher,
+}) => {
   const [toggleDelete, setToggleDelete] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const { toast } = useToast();
 
   async function deleteClass() {
+    setDeleteLoading(true);
     const response = await fetch(`/api/class/${classData.id}`, {
       method: "DELETE",
     });
@@ -36,12 +43,15 @@ const ClassPreview: FC<ClassPreviewProps> = ({ classData, isTeacher }) => {
         title: "Successfully deleted the classroom",
         description: data.message,
       });
+      onChange();
     } else {
       toast({
         title: "There was en error",
         description: data.message,
       });
     }
+
+    setDeleteLoading(false);
   }
 
   return (
@@ -80,9 +90,18 @@ const ClassPreview: FC<ClassPreviewProps> = ({ classData, isTeacher }) => {
                     <Icons.close className="w-4 h-4 " />
                     Cancel
                   </button>
-                  <button className="bg-rose-600 hover:bg-rose-700 flex items-center justify-center gap-1 text-white w-fit p-2 rounded-md">
-                    <Icons.delete className="w-4 h-4 " />
-                    Delete
+                  <button
+                    onClick={deleteClass}
+                    className="bg-rose-600 hover:bg-rose-700 flex items-center justify-center gap-1 text-white w-fit p-2 rounded-md"
+                  >
+                    {deleteLoading ? (
+                      <Icons.loading className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Icons.delete className="w-4 h-4 " />
+                        Delete
+                      </>
+                    )}
                   </button>
                 </div>
               </DialogContent>

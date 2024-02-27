@@ -11,9 +11,11 @@ import {
   Check,
   Trash,
   Pen,
+  UploadCloud,
 } from "lucide-react";
 
 export const Icons = {
+  upload: UploadCloud,
   edit: Pen,
   delete: Trash,
   tick: Check,
