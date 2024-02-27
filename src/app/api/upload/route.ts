@@ -1,6 +1,8 @@
 import cloudinary from "cloudinary";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -9,6 +11,49 @@ cloudinary.v2.config({
 });
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "You are not authenticated!",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+
+  const user = await db.user.findUnique({
+    where: {
+      email: session.user?.email!,
+    },
+  });
+
+  if (!user) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "User are not authorized!",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+
+  if (user.role !== "TEACHER") {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "You are not authorized!",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+
   const data = await req.formData();
   const file = data.get("file") as File;
 
@@ -54,6 +99,13 @@ export async function POST(req: Request) {
   // save the url in the document data that we just created
   // create a reference to the document in the classroom
   // return the document that we just created
+  await db.document.create({
+    data: {
+      title: data.get("title") as string,
+      source: result.secure_url,
+      classId: parseInt(data.get("classId") as string),
+    },
+  });
 
   return NextResponse.json({
     success: true,

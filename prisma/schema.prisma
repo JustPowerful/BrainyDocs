@@ -32,6 +32,15 @@ model Class {
   teacher User @relation(fields: [teacherId], references: [id])
   teacherId Int
   students StudentInClass[]
+  documents Document[]
+}
+
+model Document {
+  id Int @id @default(autoincrement())
+  title String
+  source String
+  class Class @relation(fields: [classId], references: [id])
+  classId Int
 }
 
 model StudentInClass {

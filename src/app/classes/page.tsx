@@ -76,13 +76,14 @@ const Classes: FC<pageProps> = ({}) => {
       </div>
       <div className="flex flex-col gap-2 pt-10">
         {/* classes */}
-        {classes.map((c) => (
-          <ClassPreview
-            onChange={fetchClasses}
-            classData={c}
-            isTeacher={user?.role === "TEACHER"}
-          />
-        ))}
+        {classes &&
+          classes.map((c) => (
+            <ClassPreview
+              onChange={fetchClasses}
+              classData={c}
+              isTeacher={user?.role === "TEACHER"}
+            />
+          ))}
       </div>
       <div className="flex justify-center pt-10">
         <Pagination

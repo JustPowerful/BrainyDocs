@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Class } from "@prisma/client";
 import { Icons } from "@/components/Icons";
 import UploadDocs from "./components/UploadDocs";
+import { User } from "@/lib/types";
 
 interface pageProps {
   params: { id: string };
@@ -15,6 +16,9 @@ const page: FC<pageProps> = ({ params }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [classroom, setClassroom] = useState<Class>();
+
+  const { data: session } = useSession();
+  const [user, setUser] = useState<User>();
 
   const fetchClass = async () => {
     setLoading(true);
@@ -31,8 +35,22 @@ const page: FC<pageProps> = ({ params }) => {
     setLoading(false);
   };
 
+  const getUser = async () => {
+    const res = await fetch("/api/user");
+    const data = await res.json();
+    if (res.ok) {
+      setUser(data.user);
+    } else {
+      toast({
+        title: "Error while fetching the user",
+        description: data.message,
+      });
+    }
+  };
+
   useEffect(() => {
     fetchClass();
+    getUser();
   }, []);
   return (
     <>
@@ -50,7 +68,9 @@ const page: FC<pageProps> = ({ params }) => {
                 <Icons.class className="w-8 h-8" />
                 {classroom.name}
               </h1>
-              <UploadDocs />
+              {user && user.role === "TEACHER" && (
+                <UploadDocs classId={params.id} />
+              )}
             </div>
           )}
         </div>
