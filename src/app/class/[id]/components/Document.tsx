@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import DeleteDocument from "./DeleteDocument";
+import GenerateQuiz from "./GenerateQuiz";
 
 interface DocumentProps {
   document: Document;
@@ -31,9 +32,7 @@ const Document: FC<DocumentProps> = ({ document, fetchDocuments }) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <button className="bg-white text-yellow-700 p-1 rounded-md hover:bg-yellow-700 hover:text-white">
-                <Icons.robot className="w-5 h-5" />
-              </button>
+              <GenerateQuiz document={document} />
             </TooltipTrigger>
             <TooltipContent>
               <p>Generate quiz</p>

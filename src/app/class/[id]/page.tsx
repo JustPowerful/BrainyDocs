@@ -86,13 +86,20 @@ const page: FC<pageProps> = ({ params }) => {
         <div>
           {classroom && (
             <div className="pt-6 px-6 text-rose-600">
-              <h1 className="text-3xl font-semibold flex items-center gap-1">
-                <Icons.class className="w-8 h-8" />
-                {classroom.name}
-              </h1>
+              <div className="flex gap-2 items-end">
+                <h1 className="text-3xl font-semibold flex items-center gap-1">
+                  <Icons.class className="w-8 h-8" />
+                  classroom
+                </h1>
+                <small className="font-normal text-lg">{classroom.name}</small>
+              </div>
               {user && user.role === "TEACHER" && (
                 <UploadDocs classId={params.id} />
               )}
+              <h1 className="mt-4 text-2xl font-normal flex items-center gap-1">
+                {" "}
+                <Icons.document className="w-6 h-6" /> Documents{" "}
+              </h1>
               <div className="flex flex-col gap-2 mt-4">
                 {documents.map((document) => (
                   <Document
