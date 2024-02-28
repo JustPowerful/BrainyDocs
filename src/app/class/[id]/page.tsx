@@ -1,12 +1,14 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+
 import { useToast } from "@/components/ui/use-toast";
-import { Class } from "@prisma/client";
+import { Class, Document as DocType } from "@prisma/client";
 import { Icons } from "@/components/Icons";
 import UploadDocs from "./components/UploadDocs";
 import { User } from "@/lib/types";
+import { Pagination } from "@mui/material";
+import Document from "./components/Document";
 
 interface pageProps {
   params: { id: string };
@@ -17,8 +19,28 @@ const page: FC<pageProps> = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [classroom, setClassroom] = useState<Class>();
 
-  const { data: session } = useSession();
   const [user, setUser] = useState<User>();
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [documents, setDocuments] = useState<DocType[]>([]);
+
+  const fetchDocuments = async () => {
+    const res = await fetch(`/api/document?page=${page}&classid=${params.id}`);
+    const data = await res.json();
+    if (res.ok) {
+      setDocuments(data.documents);
+      setTotalPages(data.totalPages);
+    } else {
+      toast({
+        title: "Error while fetching the documents",
+        description: data.message,
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [page]);
 
   const fetchClass = async () => {
     setLoading(true);
@@ -71,10 +93,27 @@ const page: FC<pageProps> = ({ params }) => {
               {user && user.role === "TEACHER" && (
                 <UploadDocs classId={params.id} />
               )}
+              <div className="flex flex-col gap-2 mt-4">
+                {documents.map((document) => (
+                  <Document
+                    fetchDocuments={fetchDocuments}
+                    document={document}
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>
       )}
+
+      <div className="flex justify-center mt-4">
+        <Pagination
+          count={totalPages}
+          onChange={(event, page) => {
+            setPage(page);
+          }}
+        />
+      </div>
     </>
   );
 };

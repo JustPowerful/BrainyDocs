@@ -28,8 +28,6 @@ const Classes: FC<pageProps> = ({}) => {
     const res = await fetch(`/api/class?page=${page}`);
     const data = await res.json();
 
-    console.log(data);
-
     if (res.ok) {
       setClasses(data.classes);
       setTotalPages(data.totalPages);

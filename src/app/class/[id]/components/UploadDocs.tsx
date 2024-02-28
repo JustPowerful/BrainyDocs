@@ -13,6 +13,39 @@ interface UploadDocsProps {
   classId: string;
 }
 
+// const pdfToText = require('pdf-to-text');
+
+// async function convertPdfToText(url) {
+//   try {
+//     // Fetch the PDF content
+//     const response = await fetch(url);
+
+//     // Ensure successful response
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+
+//     // Get the PDF data as an array buffer
+//     const pdfData = await response.arrayBuffer();
+
+//     // Extract text from the PDF data
+//     const text = await pdfToText.pdfToText(pdfData);
+
+//     // Return the extracted text
+//     return text;
+//   } catch (error) {
+//     console.error("Error converting PDF:", error);
+//     return null;
+//   }
+// }
+
+// // Example usage
+// const pdfUrl = 'https://example.com/document.pdf'; // Replace with your actual URL
+
+// convertPdfToText(pdfUrl)
+//   .then(text => console.log(text))
+//   .catch(error => console.error(error));
+
 const UploadDocs: FC<UploadDocsProps> = ({ classId }) => {
   const [toggle, setToggle] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -43,13 +76,12 @@ const UploadDocs: FC<UploadDocsProps> = ({ classId }) => {
 
       if (response.ok) {
         toast({
-          title: "Document uploaded successfully",
+          title: "Operation successful",
+          description: "⬆️ successfully uploaded the document",
         });
         setToggle(false);
         setUploading(false);
       }
-      //   const data = await response.json();
-      //   console.log(data);
     } catch (error: any) {
       toast({
         title: "Error while uploading the course material",

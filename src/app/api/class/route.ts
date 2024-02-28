@@ -57,7 +57,7 @@ export async function GET(request: Request) {
   const LIMIT = 2; // two classes per page
   // get query params for pagination
   const page = new URL(request.url).searchParams.get("page");
-  const offset = page ? parseInt(page) * LIMIT : 0;
+  // const offset = page ? parseInt(page) * LIMIT : 0;
 
   var pageCount = 0;
 

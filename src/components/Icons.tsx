@@ -12,9 +12,15 @@ import {
   Trash,
   Pen,
   UploadCloud,
+  Files,
+  Bot,
+  Info,
 } from "lucide-react";
 
 export const Icons = {
+  info: Info,
+  robot: Bot,
+  document: Files,
   upload: UploadCloud,
   edit: Pen,
   delete: Trash,
