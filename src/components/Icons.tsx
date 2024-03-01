@@ -15,9 +15,11 @@ import {
   Files,
   Bot,
   Info,
+  Eye,
 } from "lucide-react";
 
 export const Icons = {
+  eye: Eye,
   info: Info,
   robot: Bot,
   document: Files,

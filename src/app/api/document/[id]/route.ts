@@ -46,3 +46,30 @@ export async function DELETE(
     message: "Document deleted successfully",
   });
 }
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "You are unauthorized.",
+      },
+      { status: 401 }
+    );
+  }
+  const document = await db.document.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
+  return NextResponse.json({
+    success: true,
+    message: "Successfully fetched the document",
+    document: document,
+  });
+}

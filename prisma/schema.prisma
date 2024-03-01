@@ -41,6 +41,16 @@ model Document {
   source String
   class Class @relation(fields: [classId], references: [id])
   classId Int
+  quizzes Quiz[]
+}
+
+model Quiz {
+  id Int @id @default(autoincrement())
+  title String
+  document Document @relation(fields: [documentId], references: [id])
+  documentId Int
+  questions String // content of the quiz is in JSON format
+  createdAt DateTime @default(now())
 }
 
 model StudentInClass {
