@@ -79,6 +79,8 @@ export async function POST(
     2- There should be 4 answer options for each question.
     3- Only one option should be correct.
     4- There should be 10 questions.
+    5- IMPORTANT! The options should be shuffled.
+    
 
   `;
 
@@ -89,16 +91,95 @@ export async function POST(
 
   // completion.choices[0].message.content
 
+  function shuffle(array: any[]) {
+    var currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+  }
+  // shuffle all the questions options and then save the result in the database
+  const questions = JSON.parse(completion.choices[0].message.content!);
+  questions.forEach((question: any) => {
+    const shuffledOptions = shuffle(question.options);
+    question.options = shuffledOptions;
+  });
+
   await db.quiz.create({
     data: {
       title: new Date().toLocaleString() + " Quiz",
       documentId: document.id,
-      questions: completion.choices[0].message.content!,
+      questions: JSON.stringify(questions),
     },
   });
+
+  // await db.quiz.create({
+  //   data: {
+  //     title: new Date().toLocaleString() + " Quiz",
+  //     documentId: document.id,
+  //     questions: completion.choices[0].message.content!,
+  //   },
+  // });
   // http://localhost:3000/api/quiz/42
   return NextResponse.json({
     success: true,
     message: "Successfully created a quiz.",
+  });
+}
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params; // gettting the document id from the url
+  const searchParams = req.nextUrl.searchParams;
+  const page = searchParams.get("page");
+  const limit = 5;
+
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "You are unauthorized.",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+
+  const quiz = await db.quiz.findMany({
+    where: {
+      documentId: parseInt(id),
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: limit,
+    skip: ((page ? parseInt(page) : 1) - 1) * limit,
+  });
+
+  const count = await db.quiz.count({
+    where: {
+      documentId: parseInt(id),
+    },
+  });
+
+  return NextResponse.json({
+    success: true,
+    quizzes: quiz,
+    totalPages: Math.ceil(count / limit),
   });
 }

@@ -1,4 +1,4 @@
-import { Role, Class, StudentInClass } from "@prisma/client";
+import { Role, Class, StudentInClass, Quiz } from "@prisma/client";
 
 export interface User {
   id: number;
@@ -8,4 +8,8 @@ export interface User {
   role: Role;
   teacherClasses: Class[];
   studentClasses: StudentInClass[];
+}
+
+export interface QuizType extends Quiz {
+  questions: any;
 }

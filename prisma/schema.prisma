@@ -19,6 +19,8 @@ model User {
   role Role @default(STUDENT)
   teacherClasses Class[] // accessible for teacher
   studentClasses StudentInClass[] // accessible for student
+
+  xp Int @default(0)
 }
 
 enum Role {
@@ -52,6 +54,7 @@ model Quiz {
   questions String // content of the quiz is in JSON format
   createdAt DateTime @default(now())
 }
+
 
 model StudentInClass {
   id Int @id @default(autoincrement())

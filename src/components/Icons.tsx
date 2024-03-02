@@ -16,9 +16,11 @@ import {
   Bot,
   Info,
   Eye,
+  LucideStars,
 } from "lucide-react";
 
 export const Icons = {
+  star: LucideStars,
   eye: Eye,
   info: Info,
   robot: Bot,

@@ -1,5 +1,5 @@
 "use client";
-import { Document } from "@prisma/client";
+import { Document, Quiz } from "@prisma/client";
 import { FC, useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -8,6 +8,8 @@ import thinkingAnimation from "@/lottie/thinking.json";
 
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { Icons } from "@/components/Icons";
+import { Pagination } from "@mui/material";
+import Link from "next/link";
 
 interface pageProps {
   params: { id: string };
@@ -16,7 +18,25 @@ interface pageProps {
 const page: FC<pageProps> = ({ params }) => {
   const [document, setDocument] = useState<Document>();
   const [thinking, setThinking] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const { toast } = useToast();
+
+  // button punchlines
+  const punchlines = [
+    "Generating quiz... hold on, gotta think really hard for a robot",
+    "Calculating trivia... results may surprise even me",
+    "Thinking like a human... which is hard, trust me",
+    "Uh oh, user clicked... must generate quiz rapidly",
+    "Boop. Beep. Boop. Quiz on its way",
+    "Cooking up a quiz... hope you like it spicy",
+    "Shhh, I'm thinking... (mostly about snacks, but also the quiz)",
+  ];
+
+  const [punchline, setPunchline] = useState(punchlines[0]);
+
   async function getDocument() {
     const res = await fetch(`/api/document/${params.id}`);
     const data = await res.json();
@@ -31,6 +51,9 @@ const page: FC<pageProps> = ({ params }) => {
   }
 
   async function generateQuiz() {
+    // Randomize the punchline
+    const randomIndex = Math.floor(Math.random() * punchlines.length);
+    setPunchline(punchlines[randomIndex]);
     setThinking(true);
     const res = await fetch(`/api/quiz/${params.id}`, {
       method: "POST",
@@ -50,9 +73,27 @@ const page: FC<pageProps> = ({ params }) => {
     setThinking(false);
   }
 
+  async function fetchQuizzes() {
+    const res = await fetch(`/api/quiz/${params.id}?page=${page}`);
+    const data = await res.json();
+    if (res.ok) {
+      setTotalPages(data.totalPages);
+      setQuizzes(data.quizzes);
+    } else {
+      toast({
+        title: "There was an error while fetching the quizzes",
+        description: data.message,
+      });
+    }
+  }
+
   useEffect(() => {
     getDocument();
   }, []);
+
+  useEffect(() => {
+    fetchQuizzes();
+  }, [page]);
 
   return (
     <div className="p-10">
@@ -101,7 +142,7 @@ const page: FC<pageProps> = ({ params }) => {
                     height={30}
                   />{" "}
                   {/* A funny and comedic loading text about AI is thinking */}
-                  <div>I am thinking please leave me alone ...</div>
+                  <div>{punchline}</div>
                 </div>
               ) : (
                 <>
@@ -110,6 +151,29 @@ const page: FC<pageProps> = ({ params }) => {
                 </>
               )}
             </button>
+            <h2 className="text-xl font-semibold text-rose-500 flex items-center gap-1 mt-4 mb-3">
+              <Icons.info /> Quizzes
+            </h2>
+            <div>
+              <div className="flex flex-col gap-2">
+                {quizzes.map((quiz) => (
+                  <div className="bg-rose-600 text-white p-4 rounded-md">
+                    <Link href={`/quiz/play/${quiz.id}`}>
+                      <h3 className="text-lg font-semibold">{quiz.title}</h3>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-center items-center p-5">
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={(event, value) => {
+                    setPage(value);
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
