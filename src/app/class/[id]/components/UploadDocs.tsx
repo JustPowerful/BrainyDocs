@@ -11,6 +11,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 interface UploadDocsProps {
   classId: string;
+  onUpload: () => void;
 }
 
 // const pdfToText = require('pdf-to-text');
@@ -46,7 +47,7 @@ interface UploadDocsProps {
 //   .then(text => console.log(text))
 //   .catch(error => console.error(error));
 
-const UploadDocs: FC<UploadDocsProps> = ({ classId }) => {
+const UploadDocs: FC<UploadDocsProps> = ({ classId, onUpload }) => {
   const [toggle, setToggle] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -81,6 +82,7 @@ const UploadDocs: FC<UploadDocsProps> = ({ classId }) => {
         });
         setToggle(false);
         setUploading(false);
+        onUpload();
       }
     } catch (error: any) {
       toast({

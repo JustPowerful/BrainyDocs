@@ -41,7 +41,7 @@ model Document {
   id Int @id @default(autoincrement())
   title String
   source String
-  class Class @relation(fields: [classId], references: [id])
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
   classId Int
   quizzes Quiz[]
 }
@@ -49,7 +49,7 @@ model Document {
 model Quiz {
   id Int @id @default(autoincrement())
   title String
-  document Document @relation(fields: [documentId], references: [id])
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
   documentId Int
   questions String // content of the quiz is in JSON format
   createdAt DateTime @default(now())
@@ -60,6 +60,6 @@ model StudentInClass {
   id Int @id @default(autoincrement())
   student User @relation(fields: [studentId], references: [id])
   studentId Int
-  class Class @relation(fields: [classId], references: [id])
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
   classId Int
 }

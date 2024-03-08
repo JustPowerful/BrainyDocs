@@ -94,7 +94,12 @@ const page: FC<pageProps> = ({ params }) => {
                 <small className="font-normal text-lg">{classroom.name}</small>
               </div>
               {user && user.role === "TEACHER" && (
-                <UploadDocs classId={params.id} />
+                <UploadDocs
+                  onUpload={() => {
+                    fetchDocuments();
+                  }}
+                  classId={params.id}
+                />
               )}
               <h1 className="mt-4 text-2xl font-normal flex items-center gap-1">
                 {" "}

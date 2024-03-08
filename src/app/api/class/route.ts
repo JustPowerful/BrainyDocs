@@ -54,7 +54,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
-  const LIMIT = 2; // two classes per page
+  const LIMIT = 5; // two classes per page
   // get query params for pagination
   const page = new URL(request.url).searchParams.get("page");
   // const offset = page ? parseInt(page) * LIMIT : 0;
