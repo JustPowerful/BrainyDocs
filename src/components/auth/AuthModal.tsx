@@ -4,8 +4,11 @@ import { Icons } from "../Icons";
 import { useState } from "react";
 import { useToast } from "../ui/use-toast";
 
-import { ZodError, z } from "zod";
+import { ZodError, set, z } from "zod";
 import { signIn } from "next-auth/react";
+
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import {
   Dialog,
@@ -25,6 +28,7 @@ interface UserData {
   firstname?: string;
   lastname?: string;
   confirmPassword?: string;
+  role?: string;
 }
 
 const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
@@ -34,6 +38,7 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
     firstname: "",
     lastname: "",
     confirmPassword: "",
+    role: "student",
   });
   const [loading, setLoading] = useState(false);
   const [issues, setIssues] = useState<string[]>([]);
@@ -210,7 +215,7 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
               />
             </div>
             {!isSignIn && (
-              <div className="mb-4">
+              <div className="mb-1">
                 <label>confirm password</label>
                 <Input
                   value={data?.confirmPassword}
@@ -221,6 +226,29 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
                   type="password"
                   className=""
                 />
+              </div>
+            )}
+            {!isSignIn && (
+              <div className="mb-4">
+                <label>
+                  Role <small>(Student or Teacher)</small>
+                </label>
+                <RadioGroup
+                  className="flex gap-6"
+                  defaultValue={data.role}
+                  onValueChange={(value) => {
+                    setData({ ...data, role: value });
+                  }}
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="student" id="option-one" />
+                    <Label htmlFor="option-one">Student</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="teacher" id="option-two" />
+                    <Label htmlFor="option-two">Teacher</Label>
+                  </div>
+                </RadioGroup>
               </div>
             )}
             {issues.map((issue) => (
@@ -241,12 +269,10 @@ const AuthModal: FC<AuthModalProps> = ({ isSignIn }) => {
             >
               {loading ? (
                 <Icons.loading className="w-4 h-4" />
+              ) : isSignIn ? (
+                "Sign In"
               ) : (
-                isSignIn ? (
-                  "Sign In"
-                ) : (
-                  "Sign Up"
-                )
+                "Sign Up"
               )}
             </button>
           </form>

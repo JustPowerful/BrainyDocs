@@ -17,9 +17,11 @@ import {
   Info,
   Eye,
   LucideStars,
+  UserPlus,
 } from "lucide-react";
 
 export const Icons = {
+  adduser: UserPlus,
   star: LucideStars,
   eye: Eye,
   info: Info,

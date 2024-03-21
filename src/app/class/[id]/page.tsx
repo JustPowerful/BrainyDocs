@@ -9,6 +9,7 @@ import UploadDocs from "./components/UploadDocs";
 import { User } from "@/lib/types";
 import { Pagination } from "@mui/material";
 import Document from "./components/Document";
+import ManageStudents from "./components/ManageStudents";
 
 interface pageProps {
   params: { id: string };
@@ -86,12 +87,19 @@ const page: FC<pageProps> = ({ params }) => {
         <div>
           {classroom && (
             <div className="pt-6 px-6 text-rose-600">
-              <div className="flex gap-2 items-end">
-                <h1 className="text-3xl font-semibold flex items-center gap-1">
-                  <Icons.class className="w-8 h-8" />
-                  classroom
-                </h1>
-                <small className="font-normal text-lg">{classroom.name}</small>
+              <div className="flex justify-between items-center flex-wrap">
+                <div className="flex gap-2 items-end">
+                  <h1 className="text-3xl font-semibold flex items-center gap-1">
+                    <Icons.class className="w-8 h-8" />
+                    classroom
+                  </h1>
+                  <small className="f²ont-normal text-lg">
+                    {classroom.name}
+                  </small>
+                </div>
+                <div className="mt-2">
+                  <ManageStudents classId={params.id} />
+                </div>
               </div>
               {user && user.role === "TEACHER" && (
                 <UploadDocs

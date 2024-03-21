@@ -4,9 +4,16 @@ import { db } from "@/lib/db";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { firstname, lastname, email, password, confirmPassword } = body;
+  const { firstname, lastname, email, password, confirmPassword, role } = body;
 
-  if (!firstname || !lastname || !email || !password || !confirmPassword) {
+  if (
+    !firstname ||
+    !lastname ||
+    !email ||
+    !password ||
+    !confirmPassword ||
+    !role
+  ) {
     return NextResponse.json(
       {
         succes: false,
@@ -55,6 +62,7 @@ export async function POST(request: Request) {
       lastname: lastname,
       email: email,
       password: hashedPassword,
+      role: role.toUpperCase(),
     },
   });
 
