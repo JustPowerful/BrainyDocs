@@ -1,5 +1,5 @@
 import { Icons } from "@/components/Icons";
-import { Document } from "@prisma/client";
+import { Document, User } from "@prisma/client";
 import { FC } from "react";
 
 import {
@@ -14,9 +14,10 @@ import GenerateQuiz from "./GenerateQuiz";
 interface DocumentProps {
   document: Document;
   fetchDocuments: () => void;
+  user: User;
 }
 
-const Document: FC<DocumentProps> = ({ document, fetchDocuments }) => {
+const Document: FC<DocumentProps> = ({ document, fetchDocuments, user }) => {
   return (
     <div className="bg-rose-600 text-white flex justify-between p-4 items-center rounded-md">
       <div>
@@ -41,12 +42,14 @@ const Document: FC<DocumentProps> = ({ document, fetchDocuments }) => {
         </TooltipProvider>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
-              <DeleteDocument
-                onChange={fetchDocuments}
-                documentId={document.id}
-              />
-            </TooltipTrigger>
+            {user.role === "TEACHER" && (
+              <TooltipTrigger>
+                <DeleteDocument
+                  onChange={fetchDocuments}
+                  documentId={document.id}
+                />
+              </TooltipTrigger>
+            )}
             <TooltipContent>
               <p>Delete</p>
             </TooltipContent>

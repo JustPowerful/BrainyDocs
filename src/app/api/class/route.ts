@@ -96,13 +96,12 @@ export async function GET(request: Request) {
     pageCount = Math.ceil(data._count / LIMIT);
   }
 
-  if (user?.role !== "TEACHER") {
+  if (!user) {
     return NextResponse.json({
       success: false,
       message: "You are not authorized to perform this action",
     });
   }
-
   // check if user is a teacher or a student
   // if teacher, return all classes that the teacher is teaching
   // if student, return all classes that the student is enrolled in

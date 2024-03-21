@@ -3,10 +3,10 @@
 import { FC, useEffect, useState } from "react";
 
 import { useToast } from "@/components/ui/use-toast";
-import { Class, Document as DocType } from "@prisma/client";
+import { Class, Document as DocType, User } from "@prisma/client";
 import { Icons } from "@/components/Icons";
 import UploadDocs from "./components/UploadDocs";
-import { User } from "@/lib/types";
+// import { User } from "@/lib/types";
 import { Pagination } from "@mui/material";
 import Document from "./components/Document";
 import ManageStudents from "./components/ManageStudents";
@@ -97,9 +97,11 @@ const page: FC<pageProps> = ({ params }) => {
                     {classroom.name}
                   </small>
                 </div>
-                <div className="mt-2">
-                  <ManageStudents classId={params.id} />
-                </div>
+                {user && user.role === "TEACHER" && (
+                  <div className="mt-2">
+                    <ManageStudents classId={params.id} />
+                  </div>
+                )}
               </div>
               {user && user.role === "TEACHER" && (
                 <UploadDocs
@@ -116,6 +118,8 @@ const page: FC<pageProps> = ({ params }) => {
               <div className="flex flex-col gap-2 mt-4">
                 {documents.map((document) => (
                   <Document
+                    key={document.id}
+                    user={user!}
                     fetchDocuments={fetchDocuments}
                     document={document}
                   />

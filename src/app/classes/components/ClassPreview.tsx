@@ -27,6 +27,7 @@ const ClassPreview: FC<ClassPreviewProps> = ({
 }) => {
   const [toggleDelete, setToggleDelete] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { toast } = useToast();
 
@@ -111,11 +112,7 @@ const ClassPreview: FC<ClassPreviewProps> = ({
               <Icons.edit className="w-4 h-4" />
             </button>
           </>
-        ) : (
-          <button className="text-blue-600 bg-white p-1.5 rounded-sm hover:bg-blue-400 hover:text-white">
-            <Icons.logout className="w-4 h-4" />
-          </button>
-        )}
+        ) : null}
       </div>
     </div>
   );

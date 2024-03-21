@@ -13,6 +13,7 @@ import ClassPreview from "./components/ClassPreview";
 interface pageProps {}
 
 const Classes: FC<pageProps> = ({}) => {
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User>();
   const [classes, setClasses] = useState<Class[]>([]);
   const [page, setPage] = useState(1);
@@ -25,6 +26,7 @@ const Classes: FC<pageProps> = ({}) => {
   }
 
   async function fetchClasses() {
+    setLoading(true);
     const res = await fetch(`/api/class?page=${page}`);
     const data = await res.json();
 
@@ -34,6 +36,7 @@ const Classes: FC<pageProps> = ({}) => {
     } else {
       console.error(data.message);
     }
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -72,17 +75,27 @@ const Classes: FC<pageProps> = ({}) => {
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-2 pt-10">
-        {/* classes */}
-        {classes &&
-          classes.map((c) => (
-            <ClassPreview
-              onChange={fetchClasses}
-              classData={c}
-              isTeacher={user?.role === "TEACHER"}
-            />
-          ))}
-      </div>
+      {loading ? (
+        <div>
+          <div className="flex justify-center items-center  w-full">
+            <div className="text-rose-600">
+              <Icons.loading className="w-10 h-10" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2 pt-10">
+          {/* classes */}
+          {classes &&
+            classes.map((c) => (
+              <ClassPreview
+                onChange={fetchClasses}
+                classData={c}
+                isTeacher={user?.role === "TEACHER"}
+              />
+            ))}
+        </div>
+      )}
       <div className="flex justify-center pt-10">
         <Pagination
           count={totalPages}

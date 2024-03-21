@@ -32,7 +32,7 @@ const Navbar: FC<NavbarProps> = ({}) => {
           }}
         />
       )}
-      <div className="fixed top-0 left-0 w-full flex items-center justify-between px-4 bg-white bg-opacity-30 shadow-md shadow-zinc-400 h-16 backdrop-blur-md">
+      <div className="fixed z-20 top-0 left-0 w-full flex items-center justify-between px-4 bg-white bg-opacity-30 shadow-md shadow-zinc-400 h-16 backdrop-blur-md">
         <div>
           <Image src={logo} alt="navbar logo" className="h-10 w-auto" />
         </div>
