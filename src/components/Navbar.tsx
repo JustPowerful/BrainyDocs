@@ -33,9 +33,9 @@ const Navbar: FC<NavbarProps> = ({}) => {
         />
       )}
       <div className="fixed z-20 top-0 left-0 w-full flex items-center justify-between px-4 bg-white bg-opacity-30 shadow-md shadow-zinc-400 h-16 backdrop-blur-md">
-        <div>
+        <Link href="/">
           <Image src={logo} alt="navbar logo" className="h-10 w-auto" />
-        </div>
+        </Link>
         <div>
           {/* <button className="flex gap-1 items-center justify-center border-2 border-rose-600 box-border text-rose-600 px-4 py-1 rounded-md hover:bg-rose-600 hover:text-white transition-colors">
           <Icons.login className="w-4 h-4" /> sign in

@@ -18,9 +18,17 @@ import {
   Eye,
   LucideStars,
   UserPlus,
+  Sparkles,
+  Users,
+  Mail,
+  Phone,
 } from "lucide-react";
 
 export const Icons = {
+  email: Mail,
+  phone: Phone,
+  users: Users,
+  xp: Sparkles,
   adduser: UserPlus,
   star: LucideStars,
   eye: Eye,

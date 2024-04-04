@@ -469,6 +469,32 @@ export default function Home() {
             </p>
           </div>
         </div>
+        {/* footer */}
+        <div className="bg-rose-600 text-white p-14 w-full">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col">
+              <h1 className="text-3xl font-semibold">BrainyDocs</h1>
+              <p className="text-lg mt-4">
+                BrainyDocs is an AI-powered learning platform that helps you
+                learn more effectively by personalizing your learning
+                experience.
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-3xl font-semibold">Contact us</h1>
+              <p className="text-lg mt-4 flex items-center gap-1">
+                <Icons.email className="w-4 h-4" /> Email:{" "}
+                <a href="mailto:ahmedaminedoudech@gmail.com">
+                  ahmedaminedoudech@gmail.com
+                </a>
+              </p>
+              <p className="text-lg mt-4 flex items-center gap-1">
+                <Icons.phone className="w-4 h-4" /> Phone:
+                <a href="tel:+216 22 22 22 22">+216 28 825 413</a>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );
