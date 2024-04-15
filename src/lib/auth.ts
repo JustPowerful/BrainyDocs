@@ -1,9 +1,25 @@
-import { NextAuthOptions } from "next-auth";
+import { DefaultUser, NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { db } from "@/lib/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import bcrypt from "bcrypt";
+
+declare module "next-auth" {
+  interface Session {
+    user?: DefaultUser & {
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: string;
+    };
+  }
+  interface User extends DefaultUser {
+    id: number;
+    firstname: string;
+    lastname: string;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -65,9 +81,9 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.firstname = token.firstname;
-      session.user.lastname = token.lastname;
+      session.user!.id = token.id as unknown as string;
+      session.user!.firstname = token.firstname as unknown as string;
+      session.user!.lastname = token.lastname as unknown as string;
       return session;
     },
   },
